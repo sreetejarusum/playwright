@@ -1,87 +1,78 @@
 # Playwright Test Automation Framework
 
-This project implements a Playwright-based test automation framework for web applications, focusing on robust and maintainable UI tests.
+This project implements a robust and maintainable Playwright-based test automation framework for web applications. It adheres to **SOLID principles** and utilizes advanced design patterns like **Factory** and **Singleton** for efficient browser and session management.
+
+## Key Features
+
+*   **Browser Factory**: Centralized logic for creating browser instances (`Chromium`, `Firefox`, `WebKit`).
+*   **Session Singleton**: Ensures a single point of control for browser sessions, optimizing resource usage.
+*   **Optimized Execution**: Reuses the same browser instance across tests within a worker to significantly reduce execution time.
+*   **Dynamic Environment Selection**: Easily switch between environments (`stage`, `pp`, `prod`) via CLI.
+*   **Automatic Retries**: Configured to retry failed tests up to 3 times.
+*   **Page Object Model (POM)**: Encapsulates page-specific logic for better maintainability.
 
 ## Project Structure
 
-The framework is organized into the following key directories:
-
 *   `tests/`
     *   `ui/`
-        *   `page-classes/`: Contains Page Object Model (POM) classes for different pages of the application. Each class represents a web page or a significant part of it, encapsulating selectors and interactions.
-            *   `login.page.ts`: Page class for the login functionality.
-        *   `test-cases/`: Contains the actual test specifications.
-            *   `baseFixture.ts`: A custom Playwright test fixture that provides common setup (browser launch, base URL navigation) and teardown (browser close, logout) logic, as well as shared fixtures like `LoginPage` and `credentials`.
-            *   `loginTest/`:
-                *   `example.spec.ts`: Example test file demonstrating login functionality using the `LoginPage` class and credentials from a CSV file.
-*   `test-data/`: Stores test data in various formats.
-    *   `login-credentials.csv`: CSV file containing sample login credentials.
-*   `utils/`: Contains utility functions used across the framework.
-    *   `csv-utils.ts`: Provides functions for reading and potentially writing CSV files.
-*   `envs/`: Stores environment-specific configurations.
-    *   `stage.ts`: Defines the `baseURL` for the staging environment.
-*   `playwright.config.ts`: Playwright configuration file.
-*   `package.json`: Project dependencies and scripts.
+        *   `page-classes/`: POM classes (e.g., `login.page.ts`).
+        *   `test-cases/`: Test specifications.
+            *   `baseFixture.ts`: Custom fixture using `SessionManager` for setup/teardown.
+            *   `loginTest/`: Example login tests.
+*   `utils/`
+    *   `BrowserFactory.ts`: Factory class for creating browsers.
+    *   `SessionManager.ts`: Singleton class for managing browser/context lifecycle.
+    *   `csv-utils.ts`: CSV handling utilities.
+*   `envs/`: Environment configurations (`stage.ts`, `pp.ts`, `prod.ts`).
+*   `test-data/`: Data files (e.g., `login-credentials.csv`).
+*   `playwright.config.ts`: Main configuration file.
 
 ## Getting Started
 
 ### Prerequisites
 
-*   Node.js (LTS version recommended)
-*   npm or Yarn
+*   Node.js (LTS)
+*   npm
 
 ### Installation
 
-1.  **Clone the repository (if applicable):**
-    ```bash
-    git clone <your-repository-url>
-    cd <your-project-directory>
-    ```
-
-2.  **Install dependencies:**
-    ```bash
-    npm install
-    # or yarn install
-    ```
+```bash
+npm install
+```
 
 ### Running Tests
 
-To run all tests in the framework, use the following command:
-
+**Default (Stage Environment):**
 ```bash
 npx playwright test
 ```
 
-To run tests in a headed browser (visible UI):
+**Specific Environment:**
+Use the `TEST_ENV` variable to select `stage`, `pp`, or `prod`.
+```bash
+TEST_ENV=pp npx playwright test
+TEST_ENV=prod npx playwright test
+```
 
+**Headed Mode:**
 ```bash
 npx playwright test --headed
 ```
 
-To run specific test files or folders, you can specify the path:
+## Architecture & Design Patterns
 
-```bash
-npx playwright test tests/ui/test-cases/loginTest/example.spec.ts
-```
+### Browser Factory
+Located in `utils/BrowserFactory.ts`. It abstracts the complexity of browser creation, allowing for easy extension and configuration of different browser types.
+
+### Session Manager (Singleton)
+Located in `utils/SessionManager.ts`. It manages the lifecycle of the Browser, Context, and Page.
+*   **Optimization**: It keeps the browser instance open across multiple tests in the same worker, closing only the context/page between tests. This drastically reduces the overhead of launching a new browser for every test.
+*   **Teardown**: A worker-scoped fixture in `baseFixture.ts` ensures the browser is properly closed when all tests in the worker are complete.
 
 ## Configuration
 
-### Base URL
+### Environments
+Environment URLs are defined in `envs/*.ts`. The active environment is selected dynamically in `playwright.config.ts` based on `TEST_ENV`.
 
-The base URL for the tests is configured in `envs/stage.ts` and used in `playwright.config.ts`. You can modify `envs/stage.ts` to switch between different environments or add new environment files.
-
-### Test Data
-
-Login credentials and other test data are stored in `test-data/login-credentials.csv`. You can extend this file or create new CSV files for different test scenarios.
-
-### Custom Fixtures
-
-The `tests/ui/test-cases/baseFixture.ts` file provides custom fixtures for `LoginPage` and `credentials`, which are automatically available to your tests. This promotes reusability and reduces boilerplate code.
-
-## Page Object Model (POM)
-
-The framework follows the Page Object Model design pattern. Each page of the application has a corresponding page class in the `tests/ui/page-classes/` directory. These classes encapsulate the locators and actions related to that page, making tests more readable and maintainable.
-
-## Utility Functions
-
-The `utils/` directory contains helper functions like `csv-utils.ts` for reading CSV files, which can be extended for other common tasks.
+### Retries
+Tests are configured to retry **3 times** on failure to handle flaky tests. This is set in `playwright.config.ts`.

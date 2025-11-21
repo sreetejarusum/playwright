@@ -1,5 +1,17 @@
 import { defineConfig, devices } from '@playwright/test';
-import { baseURL } from './envs/stage';
+import * as stage from './envs/stage';
+import * as pp from './envs/pp';
+import * as prod from './envs/prod';
+
+const environments = { stage, pp, prod };
+const envName = (process.env.TEST_ENV || 'stage') as keyof typeof environments;
+const envConfig = environments[envName];
+
+if (!envConfig) {
+  throw new Error(`Invalid TEST_ENV: ${envName}. Available environments: ${Object.keys(environments).join(', ')}`);
+}
+
+const { baseURL } = envConfig;
 
 /**
  * Read environment variables from file.
@@ -20,7 +32,7 @@ export default defineConfig({
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   // forbidOnly: !!process.env.CI,
   /* Retry on CI only */
-  // retries: process.env.CI ? 2 : 0,
+  retries: 3,
   /* Opt out of parallel tests on CI. */
   // workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
@@ -55,25 +67,25 @@ export default defineConfig({
     },
 
     */
-    /* Test against mobile viewports. */
-    // {
-    //   name: 'Mobile Chrome',
-    //   use: { ...devices['Pixel 5'] },
-    // },
-    // {
-    //   name: 'Mobile Safari',
-    //   use: { ...devices['iPhone 12'] },
-    // },
+  /* Test against mobile viewports. */
+  // {
+  //   name: 'Mobile Chrome',
+  //   use: { ...devices['Pixel 5'] },
+  // },
+  // {
+  //   name: 'Mobile Safari',
+  //   use: { ...devices['iPhone 12'] },
+  // },
 
-    /* Test against branded browsers. */
-    // {
-    //   name: 'Microsoft Edge',
-    //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
-    // },
-    // {
-    //   name: 'Google Chrome',
-    //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
-    // },
+  /* Test against branded browsers. */
+  // {
+  //   name: 'Microsoft Edge',
+  //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
+  // },
+  // {
+  //   name: 'Google Chrome',
+  //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
+  // },
   // ],
 
   /* Run your local dev server before starting the tests */

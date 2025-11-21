@@ -5,6 +5,7 @@ import * as prod from './envs/prod';
 
 const environments = { stage, pp, prod };
 const envName = (process.env.TEST_ENV || 'stage') as keyof typeof environments;
+console.log(`Selected Environment: ${envName}`);
 const envConfig = environments[envName];
 
 if (!envConfig) {

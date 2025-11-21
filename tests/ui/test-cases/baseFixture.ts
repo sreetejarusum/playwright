@@ -34,6 +34,7 @@ export const test = baseTest.extend<MyTestFixtures, MyWorkerFixtures>({
 });
 
 test.beforeEach(async ({ page, baseURL }) => {
+  console.log(`Fixture received baseURL: ${baseURL}`);
   console.log(`Navigating to: ${baseURL}`);
   await page.goto(baseURL || '/');
 });

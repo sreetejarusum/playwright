@@ -1,1 +1,1 @@
-export const baseURL = 'https://kaleyra.io/';
+export const baseURL = 'https://ApplicationURL/';

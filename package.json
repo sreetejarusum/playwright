@@ -1,0 +1,32 @@
+{
+  "name": "playwrightautomation",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "playwright test",
+    "test:ui": "playwright test tests/ui --project=chromium",
+    "test:api": "playwright test tests/api",
+    "lint": "echo \"Add linter script\"",
+    "prepare": "npx playwright install"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "axios": "^1.5.0",
+    "dotenv": "^16.3.1",
+    "mongodb": "^5.8.0",
+    "mysql2": "^3.6.0",
+    "properties-reader": "^2.3.0",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.1",
+    "@types/node": "^24.10.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.9.0"
+  }
+}

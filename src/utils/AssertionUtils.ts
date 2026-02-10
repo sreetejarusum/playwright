@@ -71,6 +71,70 @@ export class AssertionUtils {
         }
     }
 
+    async assertChecked(locator: string | Locator) {
+        try {
+            await expect(this.getLocator(locator)).toBeChecked();
+        } catch (error: any) {
+            throw new Error(`Assertion failed: ${locator} is not checked: ${error.message}`);
+        }
+    }
+
+    async assertNotChecked(locator: string | Locator) {
+        try {
+            await expect(this.getLocator(locator)).not.toBeChecked();
+        } catch (error: any) {
+            throw new Error(`Assertion failed: ${locator} is checked (expected unchecked): ${error.message}`);
+        }
+    }
+
+    async assertValue(locator: string | Locator, expectedValue: string) {
+        try {
+            await expect(this.getLocator(locator)).toHaveValue(expectedValue);
+        } catch (error: any) {
+            throw new Error(`Assertion failed: ${locator} does not have value "${expectedValue}": ${error.message}`);
+        }
+    }
+
+    async assertCount(locator: string | Locator, expectedCount: number) {
+        try {
+            await expect(this.getLocator(locator)).toHaveCount(expectedCount);
+        } catch (error: any) {
+            throw new Error(`Assertion failed: ${locator} does not have count ${expectedCount}: ${error.message}`);
+        }
+    }
+
+    async assertEditable(locator: string | Locator) {
+        try {
+            await expect(this.getLocator(locator)).toBeEditable();
+        } catch (error: any) {
+            throw new Error(`Assertion failed: ${locator} is not editable: ${error.message}`);
+        }
+    }
+
+    async assertFocused(locator: string | Locator) {
+        try {
+            await expect(this.getLocator(locator)).toBeFocused();
+        } catch (error: any) {
+            throw new Error(`Assertion failed: ${locator} is not focused: ${error.message}`);
+        }
+    }
+
+    async assertClass(locator: string | Locator, expectedClass: string | RegExp) {
+        try {
+            await expect(this.getLocator(locator)).toHaveClass(expectedClass);
+        } catch (error: any) {
+            throw new Error(`Assertion failed: ${locator} does not have class "${expectedClass}": ${error.message}`);
+        }
+    }
+
+    async assertEmpty(locator: string | Locator) {
+        try {
+            await expect(this.getLocator(locator)).toBeEmpty();
+        } catch (error: any) {
+            throw new Error(`Assertion failed: ${locator} is not empty: ${error.message}`);
+        }
+    }
+
     // =========================================================================
     // Page Assertions
     // =========================================================================

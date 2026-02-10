@@ -1,4 +1,4 @@
-import { Page, Locator, Frame, BrowserContext, expect } from '@playwright/test';
+import { Page, Locator, Frame, BrowserContext, expect, ElementHandle } from '@playwright/test';
 
 export class UIUtils {
     readonly page: Page;
@@ -667,6 +667,75 @@ export class UIUtils {
         }
     }
 
+
+    // =========================================================================
+    // 10. Shadow DOM Utilities
+    // =========================================================================
+
+    /**
+     * Finds an element inside a shadow DOM.
+     * @param hostSelector The selector for the shadow host.
+     * @param innerSelector The selector for the element inside the shadow root. Supports XPath (prefix with xpath=).
+     */
+    async findInShadow(hostSelector: string, innerSelector: string): Promise<Locator | ElementHandle> {
+        try {
+            if (!innerSelector.startsWith('xpath=')) {
+                // CSS and Text locators pierce shadow DOM by default when nested.
+                // Note: returns a Locator which is lazy and won't throw until an action is performed.
+                return this.page.locator(hostSelector).locator(innerSelector);
+            }
+
+            // For XPath, we must manually pierce the shadow root via JS
+            const xpath = innerSelector.replace('xpath=', '');
+            const handle = await this.page.evaluateHandle(({ hostSel, xpathStr }) => {
+                const host = document.querySelector(hostSel);
+                if (!host || !host.shadowRoot) return null;
+
+                // document.evaluate doesn't support ShadowRoot directly (NotSupportedError).
+                // We iterate over children and evaluate relative to them.
+                for (const child of Array.from(host.shadowRoot.children)) {
+                    try {
+                        const result = document.evaluate(xpathStr, child, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+                        if (result) return result;
+                    } catch (e) {
+                        // Ignore errors for individual children (e.g. invalid XPath for that subtree)
+                    }
+                }
+                return null;
+            }, { hostSel: hostSelector, xpathStr: xpath });
+
+            const element = handle.asElement();
+            if (!element) {
+                throw new Error(`Element "${innerSelector}" not found in shadow DOM of "${hostSelector}"`);
+            }
+            return element;
+        } catch (error: any) {
+            throw new Error(`Failed to find element in shadow DOM: ${error.message}`);
+        }
+    }
+
+    async clickInShadow(hostSelector: string, innerSelector: string) {
+        try {
+            const element = await this.findInShadow(hostSelector, innerSelector);
+            await element.click();
+        } catch (error: any) {
+            throw new Error(`Failed to click shadow element: ${error.message}`);
+        }
+    }
+
+    async fillInShadow(hostSelector: string, innerSelector: string, text: string) {
+        try {
+            const element = await this.findInShadow(hostSelector, innerSelector);
+            if ('fill' in element) {
+                await element.fill(text);
+            } else {
+                // ElementHandle uses fill as well
+                await (element as ElementHandle).fill(text);
+            }
+        } catch (error: any) {
+            throw new Error(`Failed to fill shadow element: ${error.message}`);
+        }
+    }
 
     // Helper
     private getLocator(locator: string | Locator): Locator {

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+    <div id="host"></div>
+    <script>
+        const host = document.getElementById('host');
+        const root = host.attachShadow({ mode: 'open' });
+        root.innerHTML = `
+            <div class="inner">
+                <p>Text inside shadow</p>
+                <button id="shadow-btn">Shadow Button</button>
+                <input id="shadow-input" placeholder="Type here">
+            </div>
+        `;
+    </script>
+</body>
+
+</html>

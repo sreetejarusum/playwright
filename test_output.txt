@@ -1,0 +1,56 @@
+
+Running 2 tests using 2 workers
+
+  ✘  1 [chromium] › tests/ui/shadowUtils.spec.ts:20:9 › Shadow DOM Utilities Test › should find and click element inside shadow DOM using XPath (410ms)
+  ✘  2 [chromium] › tests/ui/shadowUtils.spec.ts:25:9 › Shadow DOM Utilities Test › should fill input inside shadow DOM using XPath (410ms)
+
+
+  1) [chromium] › tests/ui/shadowUtils.spec.ts:20:9 › Shadow DOM Utilities Test › should find and click element inside shadow DOM using XPath 
+
+    Error: Failed to click shadow element: Failed to find element in shadow DOM: page.evaluateHandle: NotSupportedError: Failed to execute 'evaluate' on 'Document': The node provided is '#document-fragment', which is not a valid context node type.
+        at eval (eval at evaluate (:290:30), <anonymous>:7:25)
+        at UtilityScript.evaluate (<anonymous>:292:16)
+        at UtilityScript.<anonymous> (<anonymous>:1:44)
+        at eval (eval at evaluate (:290:30), <anonymous>:7:25)
+        at UtilityScript.evaluate (<anonymous>:292:16)
+        at UtilityScript.<anonymous> (<anonymous>:1:44)
+        at UIUtils.clickInShadow (/Users/sreeteja/LearningPython/PlaywrightAutomation/src/utils/uiUtils/UIUtils.ts:710:19)
+        at /Users/sreeteja/LearningPython/PlaywrightAutomation/tests/ui/shadowUtils.spec.ts:22:9
+
+    Error Context: test-results/ui-shadowUtils-Shadow-DOM--74042-side-shadow-DOM-using-XPath-chromium/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/ui-shadowUtils-Shadow-DOM--74042-side-shadow-DOM-using-XPath-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/ui-shadowUtils-Shadow-DOM--74042-side-shadow-DOM-using-XPath-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chromium] › tests/ui/shadowUtils.spec.ts:25:9 › Shadow DOM Utilities Test › should fill input inside shadow DOM using XPath 
+
+    Error: Failed to fill shadow element: Failed to find element in shadow DOM: page.evaluateHandle: NotSupportedError: Failed to execute 'evaluate' on 'Document': The node provided is '#document-fragment', which is not a valid context node type.
+        at eval (eval at evaluate (:290:30), <anonymous>:7:25)
+        at UtilityScript.evaluate (<anonymous>:292:16)
+        at UtilityScript.<anonymous> (<anonymous>:1:44)
+        at eval (eval at evaluate (:290:30), <anonymous>:7:25)
+        at UtilityScript.evaluate (<anonymous>:292:16)
+        at UtilityScript.<anonymous> (<anonymous>:1:44)
+        at UIUtils.fillInShadow (/Users/sreeteja/LearningPython/PlaywrightAutomation/src/utils/uiUtils/UIUtils.ts:724:19)
+        at /Users/sreeteja/LearningPython/PlaywrightAutomation/tests/ui/shadowUtils.spec.ts:27:9
+
+    Error Context: test-results/ui-shadowUtils-Shadow-DOM--0d6c1-side-shadow-DOM-using-XPath-chromium/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/ui-shadowUtils-Shadow-DOM--0d6c1-side-shadow-DOM-using-XPath-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/ui-shadowUtils-Shadow-DOM--0d6c1-side-shadow-DOM-using-XPath-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [chromium] › tests/ui/shadowUtils.spec.ts:20:9 › Shadow DOM Utilities Test › should find and click element inside shadow DOM using XPath 
+    [chromium] › tests/ui/shadowUtils.spec.ts:25:9 › Shadow DOM Utilities Test › should fill input inside shadow DOM using XPath 
+
+[36m  Serving HTML report at http://localhost:58987. Press Ctrl+C to quit.[39m
